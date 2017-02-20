@@ -1,15 +1,15 @@
-var React = require('react');
-var ReactNative = require('react-native');
-var {
+import React from 'react';
+import {
   Text,
   View,
   Dimensions,
   StyleSheet,
-} = ReactNative;
+} from 'react-native';
 
-var MapView = require('react-native-maps');
+import MapView from 'react-native-maps';
+import flagImg from './assets/flag-blue.png';
 
-var { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
@@ -18,9 +18,11 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 
-var LoadingMap = React.createClass({
-  getInitialState() {
-    return {
+class LoadingMap extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -28,18 +30,19 @@ var LoadingMap = React.createClass({
         longitudeDelta: LONGITUDE_DELTA,
       },
     };
-  },
+  }
 
   render() {
     return (
       <View style={styles.container}>
         <MapView
+          provider={this.props.provider}
           style={styles.map}
           initialRegion={this.state.region}
           onPress={this.onMapPress}
-          loadingEnabled={true}
-          loadingIndicatorColor={"#666666"}
-          loadingBackgroundColor={"#eeeeee"}
+          loadingEnabled
+          loadingIndicatorColor="#666666"
+          loadingBackgroundColor="#eeeeee"
         >
           <MapView.Marker
             coordinate={{
@@ -48,7 +51,7 @@ var LoadingMap = React.createClass({
             }}
             centerOffset={{ x: -18, y: -60 }}
             anchor={{ x: 0.69, y: 1 }}
-            image={require('./assets/flag-blue.png')}
+            image={flagImg}
           />
           <MapView.Marker
             coordinate={{
@@ -72,25 +75,21 @@ var LoadingMap = React.createClass({
         </View>
       </View>
     );
-  },
-});
+  }
+}
 
-var styles = StyleSheet.create({
+LoadingMap.propTypes = {
+  provider: MapView.ProviderPropType,
+};
+
+const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
   map: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    ...StyleSheet.absoluteFillObject,
   },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
