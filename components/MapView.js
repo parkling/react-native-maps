@@ -272,6 +272,11 @@ const propTypes = {
     longitudeDelta: PropTypes.number.isRequired,
   }),
 
+  /*
+  * The heading of the map in degrees from north, 0 degrees means the map's heading is north
+  */
+  heading: PropTypes.number,
+
   /**
    * A Boolean indicating whether to use liteMode for android
    * Default value is `false`

@@ -96,6 +96,7 @@ RCT_EXPORT_VIEW_PROPERTY(onMarkerDrag, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMarkerDragEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onCalloutPress, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(initialRegion, MKCoordinateRegion)
+RCT_EXPORT_VIEW_PROPERTY(heading, CGFloat)
 
 RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, AIRMap)
 {

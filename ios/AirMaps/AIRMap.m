@@ -240,8 +240,17 @@ const CGFloat AIRMapZoomBoundBuffer = 0.01;
         region.span.longitudeDelta = self.region.span.longitudeDelta;
     }
 
-    // Animate/move to new position
-    [super setRegion:region animated:animated];
+    if (self.heading) {
+      MKMapCamera *mapCamera = [[super camera] copy];
+      [mapCamera setPitch:45];
+      [mapCamera setHeading:self.heading];
+      [mapCamera setAltitude:500];
+      [mapCamera setCenterCoordinate:region.center];
+      [super setCamera:mapCamera animated:animated];
+    } else {
+      // Animate/move to new position
+      [super setRegion:region animated:animated];
+    }
 }
 
 - (void)setInitialRegion:(MKCoordinateRegion)initialRegion {
