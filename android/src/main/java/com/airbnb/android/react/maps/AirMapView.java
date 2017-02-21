@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MotionEventCompat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -68,6 +69,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     private boolean handlePanDrag = false;
     private boolean moveOnMarkerPress = true;
     private boolean cacheEnabled = false;
+    private float heading = 0;
 
     private static final String[] PERMISSIONS = new String[] {
             "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"};
@@ -308,7 +310,6 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
             boundsToMove = bounds;
         } else {
-            Log.d("ReactNative","setRegion with heading " + this.heading);
             if (this.heading != 0) {
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
@@ -317,7 +318,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
                 tilt = 45;
                 zoom = map.getMaxZoomLevel() - 2.5f;
               }
-              CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
+              CameraPosition cameraPosition = new CameraPosition(bounds.getCenter(), zoom, tilt, this.heading);
               map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             } else {
               map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
@@ -327,8 +328,18 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     }
 
     public void setHeading(float heading) {
-        Log.d("ReactNative","setHeading to " + heading);
         this.heading = heading;
+        if (this.heading != 0) {
+          CameraPosition oldCameraPosition = map.getCameraPosition();
+          float zoom = oldCameraPosition.zoom;
+          float tilt = oldCameraPosition.tilt;
+          if (tilt != 45) {
+            tilt = 45;
+            zoom = map.getMaxZoomLevel() - 2.5f;
+          }
+          CameraPosition cameraPosition = new CameraPosition(oldCameraPosition.target, zoom, tilt, this.heading);
+          map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
+        }
     }
 
     public void setShowsUserLocation(boolean showUserLocation) {
@@ -505,7 +516,6 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     public void animateToRegion(LatLngBounds bounds, int duration) {
         if (map != null) {
             startMonitoringRegion();
-            Log.d("ReactNative","animateToRegion with heading " + this.heading);
             if (this.heading != 0) {
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
@@ -514,7 +524,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
                 tilt = 45;
                 zoom = map.getMaxZoomLevel() - 2.5f;
               }
-              CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
+              CameraPosition cameraPosition = new CameraPosition(bounds.getCenter(), zoom, tilt, this.heading);
               map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
             } else {
               map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), duration, null);
@@ -525,7 +535,6 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     public void animateToCoordinate(LatLng coordinate, int duration) {
         if (map != null) {
             startMonitoringRegion();
-            Log.d("ReactNative","animateToCoordinate with heading " + this.heading);
             if (this.heading != 0) {
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
@@ -534,10 +543,10 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
                 tilt = 45;
                 zoom = map.getMaxZoomLevel() - 2.5f;
               }
-              CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
-              map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+              CameraPosition cameraPosition = new CameraPosition(coordinate, zoom, tilt, this.heading);
+              map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
             } else {
-              map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+              map.animateCamera(CameraUpdateFactory.newLatLng(coordinate), duration, null);
             }
         }
     }
