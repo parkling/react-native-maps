@@ -327,6 +327,17 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
 
     public void setHeading(float heading) {
         this.heading = heading;
+        if (this.heading != 0) {
+          CameraPosition oldCameraPosition = map.getCameraPosition();
+          float zoom = oldCameraPosition.zoom;
+          float tilt = oldCameraPosition.tilt;
+          if (tilt != 45) {
+            tilt = 45;
+            zoom = map.getMaxZoomLevel() - 2.5f;
+          }
+          CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
+          map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     public void setShowsUserLocation(boolean showUserLocation) {
