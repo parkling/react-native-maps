@@ -308,6 +308,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
             boundsToMove = bounds;
         } else {
+            Log.d("ReactNative","setRegion with heading " + this.heading);
             if (this.heading != 0) {
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
@@ -326,18 +327,8 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     }
 
     public void setHeading(float heading) {
+        Log.d("ReactNative","setHeading to " + heading);
         this.heading = heading;
-        if (this.heading != 0) {
-          CameraPosition oldCameraPosition = map.getCameraPosition();
-          float zoom = oldCameraPosition.zoom;
-          float tilt = oldCameraPosition.tilt;
-          if (tilt != 45) {
-            tilt = 45;
-            zoom = map.getMaxZoomLevel() - 2.5f;
-          }
-          CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
-          map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
     }
 
     public void setShowsUserLocation(boolean showUserLocation) {
@@ -514,6 +505,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     public void animateToRegion(LatLngBounds bounds, int duration) {
         if (map != null) {
             startMonitoringRegion();
+            Log.d("ReactNative","animateToRegion with heading " + this.heading);
             if (this.heading != 0) {
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
@@ -533,6 +525,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     public void animateToCoordinate(LatLng coordinate, int duration) {
         if (map != null) {
             startMonitoringRegion();
+            Log.d("ReactNative","animateToCoordinate with heading " + this.heading);
             if (this.heading != 0) {
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
