@@ -308,9 +308,25 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
             boundsToMove = bounds;
         } else {
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+            if (this.heading != 0) {
+              CameraPosition oldCameraPosition = map.getCameraPosition();
+              float zoom = oldCameraPosition.zoom;
+              float tilt = oldCameraPosition.tilt;
+              if (tilt != 45) {
+                tilt = 45;
+                zoom = map.getMaxZoomLevel() - 2.5f;
+              }
+              CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
+              map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            } else {
+              map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+            }
             boundsToMove = null;
         }
+    }
+
+    public void setHeading(float heading) {
+        this.heading = heading;
     }
 
     public void setShowsUserLocation(boolean showUserLocation) {
@@ -494,7 +510,19 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     public void animateToCoordinate(LatLng coordinate, int duration) {
         if (map != null) {
             startMonitoringRegion();
-            map.animateCamera(CameraUpdateFactory.newLatLng(coordinate), duration, null);
+            if (this.heading != 0) {
+              CameraPosition oldCameraPosition = map.getCameraPosition();
+              float zoom = oldCameraPosition.zoom;
+              float tilt = oldCameraPosition.tilt;
+              if (tilt != 45) {
+                tilt = 45;
+                zoom = map.getMaxZoomLevel() - 2.5f;
+              }
+              CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, this.heading);
+              map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            } else {
+              map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+            }
         }
     }
 
