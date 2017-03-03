@@ -198,13 +198,11 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         Double lngDelta;
         Double latDelta;
         ReadableMap region;
-        Float heading;
 
         switch (commandId) {
             case ANIMATE_TO_REGION:
                 region = args.getMap(0);
                 duration = args.getInt(1);
-                heading = args.getFloat(2);
                 lng = region.getDouble("longitude");
                 lat = region.getDouble("latitude");
                 lngDelta = region.getDouble("longitudeDelta");
@@ -213,7 +211,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
                         new LatLng(lat - latDelta / 2, lng - lngDelta / 2), // southwest
                         new LatLng(lat + latDelta / 2, lng + lngDelta / 2)  // northeast
                 );
-                view.animateToRegion(bounds, duration, heading);
+                view.animateToRegion(bounds, duration);
                 break;
 
             case ANIMATE_TO_COORDINATE:
