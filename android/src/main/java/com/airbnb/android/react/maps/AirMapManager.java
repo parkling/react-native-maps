@@ -203,7 +203,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         switch (commandId) {
             case ANIMATE_TO_REGION:
                 region = args.getMap(0);
-                duration = args.getInt(1);
+                duration = (int)args.getInt(1);
                 heading = (float)args.getDouble(2);
                 lng = region.getDouble("longitude");
                 lat = region.getDouble("latitude");
