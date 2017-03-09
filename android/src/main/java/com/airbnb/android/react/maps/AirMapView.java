@@ -513,10 +513,13 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
         }
     }
 
-    public void animateToRegion(LatLngBounds bounds, int duration) {
+    public void animateToRegion(LatLngBounds bounds, int duration, float heading) {
         if (map != null) {
             startMonitoringRegion();
-            if (this.heading != 0) {
+            if (this.heading != 0 || heading != 0) {
+              if (heading != 0) {
+                this.heading = heading;
+              }
               CameraPosition oldCameraPosition = map.getCameraPosition();
               float zoom = oldCameraPosition.zoom;
               float tilt = oldCameraPosition.tilt;
