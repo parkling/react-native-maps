@@ -55,6 +55,7 @@
 | Method Name | Arguments | Notes
 |---|---|---|
 | `animateToRegion` | `region: Region`, `duration: Number` |
+| `animateToRegionWithZoom` | `region: Region`, `camera: CameraPosition`, `duration: Number` |
 | `animateToCoordinate` | `coordinate: LatLng`, `duration: Number` |
 | `fitToElements` | `animated: Boolean` |
 | `fitToSuppliedMarkers` | `markerIDs: String[]`, `animated: Boolean` | If you need to use this in `ComponentDidMount`, make sure you put it in a timeout or it will cause performance problems.
@@ -111,5 +112,13 @@ type EdgeInsets {
   left: Number,
   bottom: Number,
   right: Number
+}
+```
+
+```
+type CameraPosition {
+  zoom: Number,
+  tilt: Number,
+  bearing: Number
 }
 ```
