@@ -34,6 +34,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     private static final int FIT_TO_ELEMENTS = 3;
     private static final int FIT_TO_SUPPLIED_MARKERS = 4;
     private static final int FIT_TO_COORDINATES = 5;
+    private static final int ANIMATE_TO_REGION_WITH_ZOOM = 6;
 
     private final Map<String, Integer> MAP_TYPES = MapBuilder.of(
             "standard", GoogleMap.MAP_TYPE_NORMAL,
@@ -204,7 +205,6 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
             case ANIMATE_TO_REGION:
                 region = args.getMap(0);
                 duration = (int)args.getInt(1);
-                heading = (float)args.getDouble(2);
                 lng = region.getDouble("longitude");
                 lat = region.getDouble("latitude");
                 lngDelta = region.getDouble("longitudeDelta");
@@ -213,7 +213,21 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
                         new LatLng(lat - latDelta / 2, lng - lngDelta / 2), // southwest
                         new LatLng(lat + latDelta / 2, lng + lngDelta / 2)  // northeast
                 );
-                view.animateToRegion(bounds, duration, heading);
+                view.animateToRegion(bounds, duration);
+                break;
+
+            case ANIMATE_TO_REGION_WITH_ZOOM:
+                region = args.getMap(0);
+                duration = args.getInt(1);
+                lng = region.getDouble("longitude");
+                lat = region.getDouble("latitude");
+                lngDelta = region.getDouble("longitudeDelta");
+                latDelta = region.getDouble("latitudeDelta");
+                LatLngBounds zoomBounds = new LatLngBounds(
+                        new LatLng(lat - latDelta / 2, lng - lngDelta / 2), // southwest
+                        new LatLng(lat + latDelta / 2, lng + lngDelta / 2)  // northeast
+                );
+                view.animateToRegionWithZoom(zoomBounds, duration, args.getMap(2));
                 break;
 
             case ANIMATE_TO_COORDINATE:
@@ -268,7 +282,8 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
                 "animateToCoordinate", ANIMATE_TO_COORDINATE,
                 "fitToElements", FIT_TO_ELEMENTS,
                 "fitToSuppliedMarkers", FIT_TO_SUPPLIED_MARKERS,
-                "fitToCoordinates", FIT_TO_COORDINATES
+                "fitToCoordinates", FIT_TO_COORDINATES,
+                "animateToRegionWithZoom", ANIMATE_TO_REGION_WITH_ZOOM
         );
     }
 

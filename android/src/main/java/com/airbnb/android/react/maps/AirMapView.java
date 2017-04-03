@@ -310,19 +310,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
             boundsToMove = bounds;
         } else {
-            if (this.heading != 0) {
-              CameraPosition oldCameraPosition = map.getCameraPosition();
-              float zoom = oldCameraPosition.zoom;
-              float tilt = oldCameraPosition.tilt;
-              if (tilt != 45) {
-                tilt = 45;
-                zoom = map.getMaxZoomLevel() - 2.5f;
-              }
-              CameraPosition cameraPosition = new CameraPosition(bounds.getCenter(), zoom, tilt, this.heading);
-              map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            } else {
-              map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
-            }
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
             boundsToMove = null;
         }
     }
@@ -513,44 +501,34 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
         }
     }
 
-    public void animateToRegion(LatLngBounds bounds, int duration, float heading) {
+    public void animateToRegion(LatLngBounds bounds, int duration) {
         if (map != null) {
             startMonitoringRegion();
-            if (this.heading != 0 || heading != 0) {
-              if (heading != 0) {
-                this.heading = heading;
-              }
-              CameraPosition oldCameraPosition = map.getCameraPosition();
-              float zoom = oldCameraPosition.zoom;
-              float tilt = oldCameraPosition.tilt;
-              if (tilt != 45) {
-                tilt = 45;
-                zoom = map.getMaxZoomLevel() - 2.5f;
-              }
-              CameraPosition cameraPosition = new CameraPosition(bounds.getCenter(), zoom, tilt, this.heading);
-              map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
-            } else {
-              map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), duration, null);
-            }
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0), duration, null);
+        }
+    }
+
+    public void animateToRegionWithZoom(LatLngBounds bounds, int duration, ReadableMap camera) {
+        if (map != null) {
+            startMonitoringRegion();
+
+            LatLng latLng = bounds.getCenter();
+            double lat = latLng.latitude;
+            double lng = latLng.longitude;
+
+            float zoom = (float) camera.getDouble("zoom");
+            float tilt = (float) camera.getDouble("tilt");
+            float bearing = (float) camera.getDouble("bearing");
+
+            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoom, tilt, bearing);
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
 
     public void animateToCoordinate(LatLng coordinate, int duration) {
         if (map != null) {
             startMonitoringRegion();
-            if (this.heading != 0) {
-              CameraPosition oldCameraPosition = map.getCameraPosition();
-              float zoom = oldCameraPosition.zoom;
-              float tilt = oldCameraPosition.tilt;
-              if (tilt != 45) {
-                tilt = 45;
-                zoom = map.getMaxZoomLevel() - 2.5f;
-              }
-              CameraPosition cameraPosition = new CameraPosition(coordinate, zoom, tilt, this.heading);
-              map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
-            } else {
-              map.animateCamera(CameraUpdateFactory.newLatLng(coordinate), duration, null);
-            }
+            map.animateCamera(CameraUpdateFactory.newLatLng(coordinate), duration, null);
         }
     }
 

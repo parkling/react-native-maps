@@ -458,6 +458,10 @@ class MapView extends React.Component {
     this._runCommand('animateToRegion', [region, duration || 500]);
   }
 
+  animateToRegionWithZoom(region, camera, duration) {
+    this._runCommand('animateToRegionWithZoom', [region, duration || 500, camera]);
+  }
+
   animateToCoordinate(latLng, duration) {
     this._runCommand('animateToCoordinate', [latLng, duration || 500]);
   }
