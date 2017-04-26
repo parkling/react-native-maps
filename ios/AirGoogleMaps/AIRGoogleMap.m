@@ -244,6 +244,14 @@ id regionAsJSON(MKCoordinateRegion region) {
   return self.buildingsEnabled;
 }
 
+- (void)setShowsIndoors:(BOOL)showsIndoors {
+  self.indoorEnabled = showsIndoors;
+}
+
+- (BOOL)showsIndoors {
+  return self.indoorEnabled;
+}
+
 - (void)setShowsCompass:(BOOL)showsCompass {
   self.settings.compassButton = showsCompass;
 }

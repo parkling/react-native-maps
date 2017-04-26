@@ -31,6 +31,7 @@
 @property (nonatomic, strong) NSMutableArray *tiles;
 
 @property (nonatomic, assign) BOOL showsBuildings;
+@property (nonatomic, assign) BOOL showsIndoors;
 @property (nonatomic, assign) BOOL showsTraffic;
 @property (nonatomic, assign) BOOL showsCompass;
 @property (nonatomic, assign) BOOL scrollEnabled;
