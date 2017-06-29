@@ -10,22 +10,26 @@ Second, install the native dependencies: You can use `rnpm` (now part of `react-
 add native dependencies automatically then continue the directions below depending on your target OS.
 
 ```
-react-native link
+react-native link react-native-maps
 ```
 
    >This installation should work in physical devices. For Genymotion, be sure to check Android installation about Google Play Services
 
 ## iOS
 
+> These options may not be necessary if you ran "react-native link"
+
 ### Option 1: CocoaPods - Same as the included AirMapsExplorer example
 
-1. Setup your `Podfile` like the included [example/ios/Podfile](../example/ios/Podfile), replace all references to `AirMapExplorer` with your project name, and then run `pod install`.
+1. Setup your `Podfile` like the included [example/ios/Podfile](../example/ios/Podfile), replace all references to `AirMapsExplorer` with your project name, and then run `pod install`.
    (If you do not need `GoogleMaps` support for iOS, then you can probably completely skip this step.)
 1. Open your project in Xcode workspace
-1. If you need `GoogleMaps` support also 
-    - Drag this folder `node_modules/react-native-maps/ios/AirGoogleMaps/` into your project, and choose `Create groups` in the popup window.
+1. If you need `GoogleMaps` support also
+    - Drag this folder `node_modules/react-native-maps/lib/ios/AirGoogleMaps/` into your project, and choose `Create groups` in the popup window.
     - In `AppDelegate.m`, add `@import GoogleMaps;` before `@implementation AppDelegate`. In `- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`, add `[GMSServices provideAPIKey:@"YOUR_GOOGLE_MAP_API_KEY"];`
-    - In your project's `Build Settings` > `Header Search Paths`, double click the value field. In the popup, add `$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps` and change `non-recursive` to `recursive`. (Dragging the folder `node_modules/react-native-maps/ios/AirMaps/` into your project introduces duplicate symbols. We should not do it.)
+    - In your project's `Build Settings` > `Header Search Paths`, double click the value field. In the popup, add `$(SRCROOT)/../node_modules/react-native-maps/lib/ios/AirMaps` and change `non-recursive` to `recursive`. (Dragging the folder `node_modules/react-native-maps/lib/ios/AirMaps/` into your project introduces duplicate symbols. We should not do it.)
+    
+Note:  We recommend using a version of React Native >= .40.  Newer versions (>= .40) require `package.json` to be set to `"react-native-maps": "^0.13.0"`, while older versions require `"react-native-maps": "^0.12.4"`.
 
 ### Option 2: CocoaPods
 This is now considered the **old way** because it will only work if you **don't** have
@@ -48,7 +52,7 @@ After your `Podfile` is setup properly, run `pod install`.
   >This was already done for you if you ran "react-native link"
 
 1. Open your project in Xcode, right click on `Libraries` and click `Add
-   Files to "Your Project Name"` Look under `node_modules/react-native-maps/ios` and add `AIRMaps.xcodeproj`.
+   Files to "Your Project Name"` Look under `node_modules/react-native-maps/lib/ios` and add `AIRMaps.xcodeproj`.
 1. Add `libAIRMaps.a` to `Build Phases -> Link Binary With Libraries.
 1. Click on `AIRMaps.xcodeproj` in `Libraries` and go the `Build
    Settings` tab. Double click the text to the right of `Header Search
@@ -63,7 +67,7 @@ After your `Podfile` is setup properly, run `pod install`.
 ## Android
 
 1. In your `android/app/build.gradle` add:
-   >This step is not necessary if you ran "react-native link"
+   >This step is not necessary if you ran "react-native link react-native-maps"
 
    ```groovy
    ...
@@ -72,9 +76,9 @@ After your `Podfile` is setup properly, run `pod install`.
      compile project(':react-native-maps')
    }
    ```
-   
+
    If you have a different play services than the one included in this library, use the following instead (switch 10.0.1 for the desired version):
-   
+
    ```groovy
    ...
    dependencies {
@@ -94,7 +98,7 @@ After your `Podfile` is setup properly, run `pod install`.
    ```groovy
    ...
    include ':react-native-maps'
-   project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/android')
+   project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/lib/android')
    ```
 
 1. Specify your Google Maps API Key:
@@ -125,13 +129,13 @@ If you have a blank map issue, ([#118](https://github.com/airbnb/react-native-ma
 
 You have to link dependencies with rnpm and re-run the build:
 
-1. `react-native link`
+1. `react-native link react-native-maps`
 1. `react-native run-ios`
 
 ### On Android:
 
 1. Be sure to have `new MapsPackage()` in your `MainApplication.java` :
-   >This step is not necessary if you ran "react-native link"
+   >This step is not necessary if you ran "react-native link react-native-maps"
 
    ```
    import com.airbnb.android.react.maps.MapsPackage;
@@ -190,7 +194,7 @@ You have to link dependencies with rnpm and re-run the build:
     - Extras / Google Repository
     - Android 6.0 (API 23) / Google APIs Intel x86 Atom System Image Rev. 19
     - Android SDK Build-tools 23.0.3 
-1. Check manual installation steps if you didn't run "react-native link"
+1. Check manual installation steps if you didn't run "react-native link react-native-maps"
 1. Go to [Google API Console](https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend) and select your project, or create one.
 Then, once enabled, select `Go to credentials`.
 Select `Google Maps Android API` and create a new key.
@@ -199,7 +203,7 @@ Enter the name of the API key and create it.
 1. Clean the cache :
   ```
    watchman watch-del-all
-   npm cache clean
+   npm clean cache
   ```
 
 1. When starting emulator, make sure you have enabled `Wipe user data`.
@@ -209,8 +213,10 @@ Enter the name of the API key and create it.
 1. If you encounter `com.android.dex.DexException: Multiple dex files define Landroid/support/v7/appcompat/R$anim`, then clear build folder.
   ```
    cd android
-   gradlew clean
+   ./gradlew clean
    cd ..
   ```
-  
+
 1. If you are using Android Virtual Devices (AVD), ensure that `Use Host GPU` is checked in the settings for your virtual device.
+
+1. If using an emulator and the only thing that shows up on the screen is the message: `[APPNAME] won't run without Google Play services which are not supported by your device.`, you need to change the emulator CPU/ABI setting to a system image that includes Google APIs.  These may need to be downloaded from the Android SDK Manager first.
