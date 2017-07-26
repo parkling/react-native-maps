@@ -32,6 +32,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
   private static final int FIT_TO_ELEMENTS = 3;
   private static final int FIT_TO_SUPPLIED_MARKERS = 4;
   private static final int FIT_TO_COORDINATES = 5;
+  private static final int ANIMATE_TO_REGION_WITH_ZOOM = 6; // <= Parkling addition
 
   private final Map<String, Integer> MAP_TYPES = MapBuilder.of(
       "standard", GoogleMap.MAP_TYPE_NORMAL,
