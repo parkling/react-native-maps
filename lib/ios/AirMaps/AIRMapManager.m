@@ -641,10 +641,10 @@ static int kDragCenterContext;
 
     [self _regionChanged:mapView];
 
-    if (mapView.minZoomLevel != nil && zoomLevel < mapView.minZoomLevel) {
+    if (zoomLevel < mapView.minZoomLevel) {
       [self setCenterCoordinate:[mapView centerCoordinate] zoomLevel:mapView.minZoomLevel animated:TRUE mapView:mapView];
     }
-    else if (mapView.maxZoomLevel != nil && zoomLevel > mapView.maxZoomLevel) {
+    else if (zoomLevel > mapView.maxZoomLevel) {
       [self setCenterCoordinate:[mapView centerCoordinate] zoomLevel:mapView.maxZoomLevel animated:TRUE mapView:mapView];
     }
 
@@ -818,7 +818,7 @@ static int kDragCenterContext;
     double centerPixelY = [AIRMapManager latitudeToPixelSpaceY:centerCoordinate.latitude];
 
     // determine the scale value from the zoom level
-    double zoomExponent = 20 - zoomLevel;
+    double zoomExponent = AIRMapMaxZoomLevel - zoomLevel;
     double zoomScale = pow(2, zoomExponent);
 
     // scale the map’s size in pixel space
@@ -854,7 +854,7 @@ static int kDragCenterContext;
                     mapView:(AIRMap *)mapView
 {
     // clamp large numbers to 28
-    zoomLevel = MIN(zoomLevel, 28);
+    zoomLevel = MIN(zoomLevel, AIRMapMaxZoomLevel);
 
     // use the zoom level to compute the region
     MKCoordinateSpan span = [self coordinateSpanWithMapView:mapView centerCoordinate:centerCoordinate andZoomLevel:zoomLevel];
@@ -878,7 +878,7 @@ static int kDragCenterContext;
 	double centerPixelY = [AIRMapManager latitudeToPixelSpaceY:centerCoordinate.latitude];
 
 	// determine the scale value from the zoom level
-	double zoomExponent = 20 - zoomLevel;
+	double zoomExponent = AIRMapMaxZoomLevel - zoomLevel;
 	double zoomScale = pow(2, zoomExponent);
 
 	// scale the map’s size in pixel space
@@ -932,7 +932,7 @@ static int kDragCenterContext;
     CGSize mapSizeInPixels = mapView.bounds.size;
     double zoomScale = scaledMapWidth / mapSizeInPixels.width;
     double zoomExponent = log(zoomScale) / log(2);
-    double zoomLevel = 20 - zoomExponent;
+    double zoomLevel = AIRMapMaxZoomLevel - zoomExponent;
 
     return zoomLevel;
 }
