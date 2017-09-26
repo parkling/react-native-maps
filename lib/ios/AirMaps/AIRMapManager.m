@@ -97,15 +97,19 @@ RCT_EXPORT_VIEW_PROPERTY(onMarkerDragStart, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMarkerDrag, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMarkerDragEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onCalloutPress, RCTDirectEventBlock)
-RCT_EXPORT_VIEW_PROPERTY(initialRegion, MKCoordinateRegion)
-<<<<<<< HEAD
 RCT_EXPORT_VIEW_PROPERTY(heading, CGFloat)
-=======
+RCT_CUSTOM_VIEW_PROPERTY(initialRegion, MKCoordinateRegion, AIRMap)
+{
+    if (json == nil) return;
+
+    // don't emit region change events when we are setting the initialRegion
+    BOOL originalIgnore = view.ignoreRegionChanges;
+    view.ignoreRegionChanges = YES;
+    [view setInitialRegion:[RCTConvert MKCoordinateRegion:json]];
+    view.ignoreRegionChanges = originalIgnore;
+}
 RCT_EXPORT_VIEW_PROPERTY(minZoomLevel, CGFloat)
 RCT_EXPORT_VIEW_PROPERTY(maxZoomLevel, CGFloat)
-
->>>>>>> 1db4fffcea370781bf625ab5632e8bb7a49203e4
-
 RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, AIRMap)
 {
     if (json == nil) return;
@@ -669,7 +673,7 @@ static int kDragCenterContext;
 {
     [mapView finishLoading];
     [mapView cacheViewIfNeeded];
-    
+
     mapView.onMapReady(@{});
 }
 
