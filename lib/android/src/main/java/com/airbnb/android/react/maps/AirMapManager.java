@@ -305,16 +305,19 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
   @Override
   @Nullable
   public Map<String, Integer> getCommandsMap() {
-    return MapBuilder.of(
+    // Parkling addition starts
+    Map<String, Integer> map = MapBuilder.of(
         "animateToRegion", ANIMATE_TO_REGION,
         "animateToCoordinate", ANIMATE_TO_COORDINATE,
         "animateToViewingAngle", ANIMATE_TO_VIEWING_ANGLE,
         "animateToBearing", ANIMATE_TO_BEARING,
         "fitToElements", FIT_TO_ELEMENTS,
         "fitToSuppliedMarkers", FIT_TO_SUPPLIED_MARKERS,
-        "fitToCoordinates", FIT_TO_COORDINATES,
-        "animateToRegionWithZoom", ANIMATE_TO_REGION_WITH_ZOOM // <= Parkling addition
+        "fitToCoordinates", FIT_TO_COORDINATES
     );
+    map.put("animateToRegionWithZoom", ANIMATE_TO_REGION_WITH_ZOOM);
+    return map;
+    // Parkling addition ends
   }
 
   @Override
